@@ -15,6 +15,20 @@ exports.signup = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+function replaceWithStars(str){
+    return str.split('').map( (letter, index) => {
+        if(index >= str.length/2){
+            return "*"
+        } else {
+            return letter
+        }
+    }).join('')
+} 
+function maskEmail(email){
+    let emailPart1 = email.split('@')
+    let emailPart2 = emailPart1[1].split('.')
+    return `${replaceWithStars(emailPart1[0])}@${replaceWithStars(emailPart2[0])}.${replaceWithStars(emailPart2[1])}`
+}
 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -27,11 +41,13 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     }
+                    const email = maskEmail(req.body.email);
                     res.status(200).json({
                         userId: user._id,
+                        email,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.JWT_PASSWORD,
                             { expiresIn: '24h' }
                         )
                     });

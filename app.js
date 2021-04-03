@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -8,7 +9,9 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://user1:User1@cluster0.prx1m.mongodb.net/SoPekocko?retryWrites=true&w=majority',
+app.use(helmet())
+
+mongoose.connect('mongodb+srv://' + process.env.MDB_USER + '@cluster0.prx1m.mongodb.net/' + process.env.MDB_NAME + '?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     //useUnifiedTopology: true
