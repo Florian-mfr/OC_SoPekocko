@@ -1,6 +1,9 @@
-const Sauce = require('../models/sauce');
 const fs = require('fs');
 
+// Import du modèle sauce
+const Sauce = require('../models/sauce');
+
+// Création d'une nouvelle sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
@@ -17,6 +20,7 @@ exports.createSauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
+// Récupération d'une sauce
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({
     _id: req.params.id
@@ -33,6 +37,7 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 
+// Modification d'une sauce
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file ?
   {
@@ -45,6 +50,7 @@ exports.modifySauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
+// Suppression d'une sauce
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
@@ -58,6 +64,7 @@ exports.deleteSauce = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+// Récupération de toute les sauces
 exports.getAllSauce = (req, res, next) => {
   Sauce.find().then(
     (sauces) => {
@@ -72,6 +79,7 @@ exports.getAllSauce = (req, res, next) => {
   );
 };
 
+// Système de Like/Dislike
 exports.voteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
  .then(sauce => {
